@@ -1,8 +1,5 @@
 #pragma once
 
-#include "CodePos.h"
-#include "Error.h"
-
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -10,125 +7,133 @@
 #include <utility>
 #include <vector>
 
-enum class TokenTag {
-	RegRax,
-	RegRbx,
-	RegRcx,
-	RegRdx,
-	RegRsi,
-	RegRdi,
-	RegRbp,
-	RegR8,
-	RegR9,
-	RegR10,
-	RegR11,
-	RegR12,
-	RegR13,
-	RegR14,
-	RegR15,
+#include "Error.h"
 
-	RegXmm0,
-	RegXmm1,
-	RegXmm2,
-	RegXmm3,
-	RegXmm4,
-	RegXmm5,
-	RegXmm6,
-	RegXmm7,
-	RegXmm8,
-	RegXmm9,
-	RegXmm10,
-	RegXmm11,
-	RegXmm12,
-	RegXmm13,
-	RegXmm14,
-	RegXmm15,
+using namespace Runtime;
 
-	KeyBranch,
-	KeyBreak,
-	KeyContinue,
-	KeyElse,
-	KeyIf,
-	KeyLoop,
-	KeyMacro,
-	KeyPop,
-	KeyProc,
-	KeyPush,
-	KeyReturn,
-	KeyVal,
-	KeyVar,
+namespace Lexer {
 
-	BracketOpen,     // [
-	BracketClose,    // ]
-	ParenOpen,       // (
-	ParenClose,      // )
-	BraceOpen,       // {
-	BraceClose,      // }
+	enum class TokenTag {
+		RegRax,
+		RegRbx,
+		RegRcx,
+		RegRdx,
+		RegRsi,
+		RegRdi,
+		RegRbp,
+		RegR8,
+		RegR9,
+		RegR10,
+		RegR11,
+		RegR12,
+		RegR13,
+		RegR14,
+		RegR15,
 
-	Plus,            // +
-	Minus,           // -
-	Star,            // *
-	Slash,           // /
-	Percent,         // %
-	Ampersand,       // &
-	Pipe,            // |
-	Caret,           // ^
+		RegXmm0,
+		RegXmm1,
+		RegXmm2,
+		RegXmm3,
+		RegXmm4,
+		RegXmm5,
+		RegXmm6,
+		RegXmm7,
+		RegXmm8,
+		RegXmm9,
+		RegXmm10,
+		RegXmm11,
+		RegXmm12,
+		RegXmm13,
+		RegXmm14,
+		RegXmm15,
 
-	PlusEquals,      // +=
-	MinusEquals,     // -=
-	StarEquals,      // *=
-	SlashEquals,     // /=
-	PercentEquals,   // %=
-	AmpersandEquals, // &=
-	PipeEquals,      // |=
-	CaretEquals,     // ^=
+		KeyBranch,
+		KeyBreak,
+		KeyContinue,
+		KeyElse,
+		KeyIf,
+		KeyLoop,
+		KeyMacro,
+		KeyPop,
+		KeyProc,
+		KeyPush,
+		KeyReturn,
+		KeyVal,
+		KeyVar,
 
-	Equals,          // =
+		BracketOpen,     // [
+		BracketClose,    // ]
+		ParenOpen,       // (
+		ParenClose,      // )
+		BraceOpen,       // {
+		BraceClose,      // }
 
-	LessThan,        // <
-	GreaterThan,     // >
-	LessEquals,      // <=
-	GreaterEquals,   // >=
-	EqualsEquals,    // ==
-	NotEquals,       // !=
+		Plus,            // +
+		Minus,           // -
+		Star,            // *
+		Slash,           // /
+		Percent,         // %
+		Ampersand,       // &
+		Pipe,            // |
+		Caret,           // ^
 
-	Hash,            // #
-	Shl,             // <<
-	Shr,             // >>
-	Comma,           // ,
-	Semicolon,       // ;
+		PlusEquals,      // +=
+		MinusEquals,     // -=
+		StarEquals,      // *=
+		SlashEquals,     // /=
+		PercentEquals,   // %=
+		AmpersandEquals, // &=
+		PipeEquals,      // |=
+		CaretEquals,     // ^=
 
-	Number,
-	Identifier,
-	String,
+		Equals,          // =
 
-	Eof,
-};
+		LessThan,        // <
+		GreaterThan,     // >
+		LessEquals,      // <=
+		GreaterEquals,   // >=
+		EqualsEquals,    // ==
+		NotEquals,       // !=
 
-struct Token {
-	TokenTag tag;
-	CodePos pos;
+		Hash,            // #
+		Shl,             // <<
+		Shr,             // >>
+		Comma,           // ,
+		Semicolon,       // ;
 
-	Token(const TokenTag tag, const CodePos pos) : tag{tag}, pos{pos} {}
-	virtual ~Token() = default;
-};
+		Number,
+		Identifier,
+		String,
 
-struct NumberToken : public Token {
-	int64_t value;
+		Eof,
+	};
 
-	NumberToken(const int64_t value, const CodePos pos) : Token{TokenTag::Number, pos}, value{value} {}
-};
+	struct Token {
+		TokenTag tag;
+		CodePos pos;
 
-struct IdentifierToken : public Token {
-	std::string name;
+		Token(const TokenTag tag, const CodePos pos) : tag{tag}, pos{pos} {}
 
-	IdentifierToken(std::string name, const CodePos pos) : Token{TokenTag::Identifier, pos}, name{std::move(name)} {}
-};
+		virtual ~Token() = default;
+	};
 
-struct StringToken : public Token {
-	std::string value;
+	struct NumberToken : public Token {
+		int64_t value;
 
-	StringToken(std::string value, const CodePos pos) : Token{TokenTag::String, pos}, value{std::move(value)} {}
-};
+		NumberToken(const int64_t value, const CodePos pos) : Token{TokenTag::Number, pos}, value{value} {}
+	};
 
-[[nodiscard]] Error Lex(const char* code, std::vector<std::unique_ptr<Token>>& tokens);
+	struct IdentifierToken : public Token {
+		std::string name;
+
+		IdentifierToken(std::string name, const CodePos pos) : Token{TokenTag::Identifier, pos}, name{std::move(name)} {}
+	};
+
+	struct StringToken : public Token {
+		std::string value;
+
+		StringToken(std::string value, const CodePos pos) : Token{TokenTag::String, pos}, value{std::move(value)} {}
+	};
+
+	[[nodiscard]] Error Lex(const char *code, std::vector<std::unique_ptr<Token>> &tokens);
+}

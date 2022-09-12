@@ -39,20 +39,24 @@ ab: c3                               ret
 
 ## Building
 
-This project targets only Linux/WSL and x86_64. You can compile it with `g++`,
+This project targets only Linux/WSL and x86_64. You can compile it with `cmake`,
 like so:
 
 ```
-g++ -std=c++17 -pedantic -Wall -Wextra -g -o asms Asms.cpp
+mkdir build
+cd build
+cmake ..
+cmake --build .
+#optional to run hello world
+./asms ../Examples/hello.asms 
 ```
-
-(or run `./build.sh`, which does the same thing)
-
-After building run `./asms` to see additional flags or `./asms FILE` to read,
-compile and execute a script in `FILE`. Look for examples in
+After building run `./asms FILE ` to execute a file or `./asms ` to display available flags.
+Look for examples in 
 [Example](./Examples) directory.
 
 ## Details
 
-More detailed documentation can be found at the
-[GitHub page](https://iszn11.github.io/asmscript) for this project.
+This is a fork that adds cmake as a build system and some other shenanigans.
+For more detailed information please visit the author's [GitHub prohect page](https://iszn11.github.io/asmscript).
+
+ 

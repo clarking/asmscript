@@ -1,23 +1,27 @@
 #pragma once
 
-#include "CodePos.h"
+#include "Types.h"
 
 #include <string>
 
-#define TRY(x) do { const Error _error = (x); if (_error) return _error; } while (false)
+using namespace Compiler;
 
-struct Error {
-	bool error;
-	std::string message;
-	CodePos pos;
+namespace Runtime {
 
-	operator bool() const { return error; }
 
-private:
-	Error(const bool error, std::string message, const CodePos pos) : error{error}, message{std::move(message)}, pos{pos} {}
-public:
-	Error(std::string message, const CodePos pos) : error{true}, message{std::move(message)}, pos{pos} {}
-	static const Error None;
-};
+	struct Error {
+		bool error;
+		std::string message;
+		CodePos pos;
 
-inline const Error Error::None = Error{false, std::string{}, CodePos{}};
+		operator bool() const { return error; }
+
+	private:
+		Error(const bool error, std::string message, const CodePos pos) : error{error}, message{std::move(message)}, pos{pos} {}
+	public:
+		Error(std::string message, const CodePos pos) : error{true}, message{std::move(message)}, pos{pos} {}
+		static const Error None;
+	};
+
+	inline const Error Error::None = Error{false, std::string{}, CodePos{}};
+}

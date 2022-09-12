@@ -1,41 +1,41 @@
-#include "Common.h"
 
+#include "Common.h"
 #include <cstdio>
 
-bool ReadFile(const char* const filepath, std::string& out)
-{
-	out.clear();
+namespace Runtime {
 
-	FILE* const file = fopen(filepath, "rb");
-	if (!file) return false;
+	bool ReadFile(const char *const filepath, std::string &out) {
+		out.clear();
 
-	fseek(file, 0, SEEK_END);
-	const long size = ftell(file);
-	rewind(file);
+		FILE *const file = fopen(filepath, "rb");
+		if (!file) return false;
 
-	out.resize(size);
-	fread(out.data(), 1, size, file);
-	fclose(file);
+		fseek(file, 0, SEEK_END);
+		const long size = ftell(file);
+		rewind(file);
 
-	return true;
-}
+		out.resize(size);
+		fread(out.data(), 1, size, file);
+		fclose(file);
 
-std::string Format(const char* const fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
+		return true;
+	}
 
-	std::string res = FormatV(fmt, args);
+	std::string Format(const char *const fmt, ...) {
+		va_list args;
+		va_start(args, fmt);
 
-	va_end(args);
-	return res;
-}
+		std::string res = FormatV(fmt, args);
 
-std::string FormatV(const char* const fmt, va_list args)
-{
-	const int length = vsnprintf(nullptr, 0, fmt, args);
+		va_end(args);
+		return res;
+	}
 
-	std::string ret(length, '\0');
-	vsnprintf(ret.data(), length, fmt, args);
-	return ret;
+	std::string FormatV(const char *const fmt, va_list args) {
+		const int length = vsnprintf(nullptr, 0, fmt, args);
+
+		std::string ret(length, '\0');
+		vsnprintf(ret.data(), length, fmt, args);
+		return ret;
+	}
 }
