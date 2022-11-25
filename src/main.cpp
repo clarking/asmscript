@@ -1,7 +1,7 @@
 
 #include <cstdio>
 #include <cstring>
-#include "Runtime.h"
+#include "runtime.h"
 
 using namespace Runtime;
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 		);
 		return 1;
 	}
-
+	
 	for (int argnum = 1; argnum < argc - 1; ++argnum) {
 		const char *arg = argv[argnum];
 		if (strcmp(arg, "--dump-tokens") == 0) Options::flag_dumpTokens = true;
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 		else if (strcmp(arg, "--dump-code") == 0) Options::flag_dumpCode = true;
 		else if (strcmp(arg, "--no-exec") == 0) Options::flag_noExec = true;
 	}
-
+	
 	auto res = RunFile(argv[argc - 1]);
 	return res;
 }

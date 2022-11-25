@@ -7,12 +7,12 @@
 #include <utility>
 #include <vector>
 
-#include "Error.h"
+#include "error.h"
 
 using namespace Runtime;
 
 namespace Lexer {
-
+	
 	enum class TokenTag {
 		RegRax,
 		RegRbx,
@@ -29,7 +29,7 @@ namespace Lexer {
 		RegR13,
 		RegR14,
 		RegR15,
-
+		
 		RegXmm0,
 		RegXmm1,
 		RegXmm2,
@@ -46,7 +46,7 @@ namespace Lexer {
 		RegXmm13,
 		RegXmm14,
 		RegXmm15,
-
+		
 		KeyBranch,
 		KeyBreak,
 		KeyContinue,
@@ -60,14 +60,14 @@ namespace Lexer {
 		KeyReturn,
 		KeyVal,
 		KeyVar,
-
+		
 		BracketOpen,     // [
 		BracketClose,    // ]
 		ParenOpen,       // (
 		ParenClose,      // )
 		BraceOpen,       // {
 		BraceClose,      // }
-
+		
 		Plus,            // +
 		Minus,           // -
 		Star,            // *
@@ -76,7 +76,7 @@ namespace Lexer {
 		Ampersand,       // &
 		Pipe,            // |
 		Caret,           // ^
-
+		
 		PlusEquals,      // +=
 		MinusEquals,     // -=
 		StarEquals,      // *=
@@ -85,55 +85,55 @@ namespace Lexer {
 		AmpersandEquals, // &=
 		PipeEquals,      // |=
 		CaretEquals,     // ^=
-
+		
 		Equals,          // =
-
+		
 		LessThan,        // <
 		GreaterThan,     // >
 		LessEquals,      // <=
 		GreaterEquals,   // >=
 		EqualsEquals,    // ==
 		NotEquals,       // !=
-
+		
 		Hash,            // #
 		Shl,             // <<
 		Shr,             // >>
 		Comma,           // ,
 		Semicolon,       // ;
-
+		
 		Number,
 		Identifier,
 		String,
-
+		
 		Eof,
 	};
-
+	
 	struct Token {
 		TokenTag tag;
 		CodePos pos;
-
+		
 		Token(const TokenTag tag, const CodePos pos) : tag{tag}, pos{pos} {}
-
+		
 		virtual ~Token() = default;
 	};
-
+	
 	struct NumberToken : public Token {
 		int64_t value;
-
+		
 		NumberToken(const int64_t value, const CodePos pos) : Token{TokenTag::Number, pos}, value{value} {}
 	};
-
+	
 	struct IdentifierToken : public Token {
 		std::string name;
-
+		
 		IdentifierToken(std::string name, const CodePos pos) : Token{TokenTag::Identifier, pos}, name{std::move(name)} {}
 	};
-
+	
 	struct StringToken : public Token {
 		std::string value;
-
+		
 		StringToken(std::string value, const CodePos pos) : Token{TokenTag::String, pos}, value{std::move(value)} {}
 	};
-
+	
 	[[nodiscard]] Error Lex(const char *code, std::vector<std::unique_ptr<Token>> &tokens);
 }

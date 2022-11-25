@@ -7,12 +7,12 @@ project(asms CXX)
 set(CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 add_executable(asms
-        Common.cpp
-        Parser.cpp
-        Lexer.cpp
-        Compiler.cpp
-        Runtime.cpp
-        Main.cpp)
+        src/common.cpp
+        src/parser.cpp
+        src/lexer.cpp
+        src/compiler.cpp
+        src/runtime.cpp
+        src/main.cpp)
 
 target_include_directories(asms PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
